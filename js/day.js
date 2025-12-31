@@ -47,7 +47,7 @@ if (m == 8 && dd == 15) {//搞来玩的，小日子投降
         sessionStorage.setItem("isPopupWindow", "1");
     }
 }
-if (m == 12 && dd == 31) {//元旦节
+if (m == 1 && dd == 1) {//元旦节
     if (sessionStorage.getItem("isPopupWindow") != "1") {
         Swal.fire(y.toString() + "年元旦快乐！🎉");
         sessionStorage.setItem("isPopupWindow", "1");
@@ -105,13 +105,13 @@ if (m == 12 && dd == 25) {//圣诞节
 
 //传统节日部分
 
-if ((y == 2023 && m == 4 && dd == 5) || (y == 2024 && m == 4 && dd == 4) || (y == 2025 && m == 4 && dd == 4)) {//清明节
+if ((y == 2026 && m == 4 && dd == 5) || (y == 2027 && m == 4 && dd == 5) || (y == 2028 && m == 4 && dd == 4)) {//清明节
     if (sessionStorage.getItem("isPopupWindow") != "1") {
         Swal.fire("清明时节雨纷纷,一束鲜花祭故人💐");
         sessionStorage.setItem("isPopupWindow", "1");
     }
 }
-if ((y == 2023 && m == 12 && dd == 22) || (y == 2024 && m == 12 && dd == 21) || (y == 2025 && m == 12 && dd == 21)) {//冬至
+if ((y == 2026 && m == 12 && dd == 22) || (y == 2027 && m == 12 && dd == 22) || (y == 2028 && m == 12 && dd == 21)) {//冬至
     if (sessionStorage.getItem("isPopupWindow") != "1") {
         Swal.fire("冬至快乐\n快吃上一碗热热的汤圆和饺子吧🧆");
         sessionStorage.setItem("isPopupWindow", "1");
