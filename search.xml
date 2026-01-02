@@ -4,6 +4,39 @@
   
     
     <entry>
+      <title>P9488 ZHY 的生成树题解</title>
+      <link href="/2026/01/02/P9488-ZHY-%E7%9A%84%E7%94%9F%E6%88%90%E6%A0%91%E9%A2%98%E8%A7%A3/"/>
+      <url>/2026/01/02/P9488-ZHY-%E7%9A%84%E7%94%9F%E6%88%90%E6%A0%91%E9%A2%98%E8%A7%A3/</url>
+      
+        <content type="html"><![CDATA[<h2 id="洛谷P9488"><a href="#洛谷P9488" class="headerlink" title="洛谷P9488"></a>洛谷P9488</h2><p><a href="https://www.luogu.com.cn/problem/P9488">题目链接</a></p><p>既然要求一个图的最大生成树，可以用 $\texttt{kruskal}$ 算法的思想：</p><p>按边权从大到小加边，具体过程如下</p><p>假设已经枚举完了边权为 $i + 1$ 的边，现在枚举边权为 $i$ 的边。容易发现，边权为 $i$ 的边的两个端点一定是 $i$ 的倍数。如果第 $x \times i$ 个点与第 $y \times i$ 个点不连通，则 $\gcd(x \times i, y \times i) \leq i$ 且 $\gcd(x, y) &#x3D; 1$，也就是将 $i$ 与 $i$ 的素数倍的点连一条长度为 $i$ 的边。</p><p>将 $i$ 与 $i$ 的素数倍的点连一条长度为 $i$ 的边，就可以将 $i$ 的倍数的所有点连通。可以维护一个并查集，使用按秩合并和路径压缩即可。</p><p>$\texttt{c++}$代码:</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1e7</span> + <span class="number">10</span>;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> p[N];</span><br><span class="line"><span class="type">bool</span> f[N];</span><br><span class="line"><span class="type">int</span> primes[N], cnt;</span><br><span class="line"><span class="type">bool</span> st[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">gcd</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> b ? <span class="built_in">gcd</span>(b, a % b) : a;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">find</span><span class="params">(<span class="type">int</span> x)</span></span>&#123; <span class="comment">// 并查集查找 + 路径压缩</span></span><br><span class="line">    <span class="keyword">if</span> (p[x] != x) p[x] = <span class="built_in">find</span>(p[x]);</span><br><span class="line">    <span class="keyword">return</span> p[x];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">get_primes</span><span class="params">(<span class="type">int</span> n)</span></span>&#123; <span class="comment">// 可以先预处理出1~n的所有质数</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= n; i ++ )&#123;</span><br><span class="line">        <span class="keyword">if</span> (!st[i]) primes[cnt ++ ] = i;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; primes[j] &lt;= n / i; j ++ )&#123;</span><br><span class="line">            st[primes[j] * i] = <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">if</span> (i % primes[j] == <span class="number">0</span>) <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line">    <span class="built_in">get_primes</span>(n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i ++ ) p[i] = i;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> res = <span class="number">0</span>; <span class="comment">// 答案有可能爆int, 注意开long long</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = n; i &gt;= <span class="number">1</span>; i -- )</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; cnt &amp;&amp; primes[j] &lt;= n / i; j ++ )</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">find</span>(i) != <span class="built_in">find</span>(i * primes[j]))&#123;</span><br><span class="line">                res += i;</span><br><span class="line">                p[<span class="built_in">find</span>(i * primes[j])] = <span class="built_in">find</span>(i);</span><br><span class="line">            &#125;</span><br><span class="line">    cout &lt;&lt; res &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 题解(Solution) </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 题解(Solution) </tag>
+            
+            <tag> 图论(Graph) </tag>
+            
+            <tag> 生成树(Spanning Tree) </tag>
+            
+            <tag> luogu </tag>
+            
+            <tag> 并查集(DSU) </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Hello World</title>
       <link href="/2026/01/01/hello-world/"/>
       <url>/2026/01/01/hello-world/</url>
